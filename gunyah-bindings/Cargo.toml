@@ -1,0 +1,18 @@
+[package]
+name = "gunyah-bindings"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+ack-bindings = []
+
+[dependencies]
+nix = { version = "0.26.4", default-features = false, features = ["ioctl"] }
+
+[dev-dependencies]
+byte-unit = { version = "4.0.19", default-features = false }
+claim = "0.5.0"
+libc = "0.2.168"
+nix = { version = "0.26.4", default-features = false, features = ["event"] }

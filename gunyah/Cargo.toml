@@ -1,0 +1,20 @@
+[package]
+name = "gunyah"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+ack-bindings = ["gunyah-bindings/ack-bindings", "dep:memfd"]
+
+[dependencies]
+libc = "0.2.168"
+gunyah-bindings = { path = "../gunyah-bindings" }
+nix = { version = "0.26.4", default-features = false, features = ["ioctl", "fs", "event"] }
+claim = "0.5.0"
+same-file = "1.0.6"
+anyhow = "1.0.94"
+memmap = "0.7.0"
+cfg-if = "1.0.0"
+memfd = { version = "0.6.4", optional = true }

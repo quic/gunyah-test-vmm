@@ -1,7 +1,12 @@
 // Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 
-use std::{env, io::stderr, path::PathBuf, process::Command};
+use std::{
+    env,
+    io::stderr,
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 const HOLDING_CELL_SOURCES: [&str; 3] = [
     "tests/holding_cell/holding-cell.c",
@@ -9,7 +14,7 @@ const HOLDING_CELL_SOURCES: [&str; 3] = [
     "tests/holding_cell/holding-cell-vtable.S",
 ];
 
-fn build_unsafe_read(out_dir: &PathBuf) {
+fn build_unsafe_read(out_dir: &Path) {
     println!("cargo::rerun-if-changed=src/unsafe_read.c");
     cc::Build::new()
         .file("src/unsafe_read.c")
@@ -64,8 +69,8 @@ fn main() {
 
     assert!(Command::new(objcopy)
         .args(["-O", "binary"])
-        .arg(&format!("{}/holding-cell.elf", &out_dir))
-        .arg(&format!("{}/holding-cell.bin", &out_dir))
+        .arg(format!("{}/holding-cell.elf", &out_dir))
+        .arg(format!("{}/holding-cell.bin", &out_dir))
         .stderr(stderr())
         .status()
         .unwrap()

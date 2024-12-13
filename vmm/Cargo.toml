@@ -1,0 +1,32 @@
+[package]
+name = "vmm"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+ack-bindings = ["gunyah/ack-bindings", "gunyah-bindings/ack-bindings"]
+
+[dependencies]
+libc = "0.2.168"
+vmm-sys-util = "0.11.2"
+gunyah-bindings = { path = "../gunyah-bindings" }
+gunyah = { path = "../gunyah" }
+thiserror = "1.0.69"
+vm-fdt = "0.2.0"
+anyhow = "1.0.94"
+
+[dev-dependencies]
+claim = "0.5.0"
+core_affinity = "0.8.1"
+fdt = { version = "0.1.5", features = ["pretty-printing"] }
+hexdump = "0.1.2"
+mio = { version = "0.8.11", features = ["os-poll", "os-ext"] }
+modular-bitfield = "0.11.2"
+nix = { version = "0.27.1", features = ["signal"] }
+nonzero_ext = "0.3.0"
+rstest = { version = "0.18.2", default-features = false }
+serial_test = "3.2.0"
+page_size = "0.6.0"
+pow2 = "0.1.1"

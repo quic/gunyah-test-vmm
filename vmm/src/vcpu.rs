@@ -33,7 +33,7 @@ impl GunyahVcpu {
     }
 
     pub fn run_once(&self) -> Result<gunyah_vcpu_run> {
-        let vcpu = self.vcpu.write().unwrap();
+        let mut vcpu = self.vcpu.write().unwrap();
         vcpu.run()?;
         Ok(*vcpu.mmap())
     }

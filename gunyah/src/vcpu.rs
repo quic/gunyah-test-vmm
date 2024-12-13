@@ -63,7 +63,7 @@ impl Vcpu {
         unsafe { (self.mmap.as_mut_ptr() as *mut gunyah_vcpu_run).as_mut() }.unwrap()
     }
 
-    pub fn run(&self) -> nix::Result<()> {
+    pub fn run(&mut self) -> nix::Result<()> {
         // SAFETY: Safe because we know we are a vcpu fd
         unsafe { gunyah_vcpu_run(self.as_raw_fd()) }.map(|_| ())
     }

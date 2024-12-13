@@ -132,7 +132,9 @@ impl BusDevice for GunyahGuestMemoryRegion {
                     NonZeroUsize::new(data.len()).ok_or(anyhow!("data length was zero"))?,
                 )?;
 
-                data.copy_from_slice(&src);
+                crate::unsafe_read::cautious_memcpy(data, &src)
+                    .or(Err(anyhow!("unable to read memory")))?;
+
                 Ok(())
             }
             Vcpu(_) => todo!(),
@@ -146,7 +148,8 @@ impl BusDevice for GunyahGuestMemoryRegion {
                     access.offset,
                     NonZeroUsize::new(data.len()).ok_or(anyhow!("data length was zero"))?,
                 )?;
-                src.deref_mut().copy_from_slice(data);
+                crate::unsafe_read::cautious_memcpy(src.deref_mut(), data)
+                    .or(Err(anyhow!("unable to write memory")))?;
                 Ok(())
             }
             Vcpu(_) => todo!(),

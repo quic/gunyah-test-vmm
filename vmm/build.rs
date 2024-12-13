@@ -1,13 +1,31 @@
 // Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 
-use std::{env, io::stderr, process::Command};
+use std::{env, io::stderr, path::PathBuf, process::Command};
 
 const HOLDING_CELL_SOURCES: [&str; 3] = [
     "tests/holding_cell/holding-cell.c",
     "tests/holding_cell/holding-cell-mmu.S",
     "tests/holding_cell/holding-cell-vtable.S",
 ];
+
+fn build_unsafe_read(out_dir: &PathBuf) {
+    println!("cargo::rerun-if-changed=src/unsafe_read.c");
+    cc::Build::new()
+        .file("src/unsafe_read.c")
+        .compile("unsafe_read");
+
+    let bindings = bindgen::Builder::default()
+        .header("src/unsafe_read.c")
+        .clang_arg("-D__BINDGEN__")
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
+        .generate()
+        .expect("Failed to generate bindings");
+
+    bindings
+        .write_to_file(out_dir.join("unsafe_read_bindings.rs"))
+        .expect("Couldn't write bindings!");
+}
 
 fn main() {
     for source in HOLDING_CELL_SOURCES {
@@ -21,6 +39,8 @@ fn main() {
         .expect("CC_aarch64-linux-android is unset");
     let objcopy = env::var("OBJCOPY").expect("OBJCOPY is unset");
     let out_dir = env::var("OUT_DIR").unwrap();
+
+    build_unsafe_read(&PathBuf::from(&out_dir));
 
     assert!(Command::new(cc)
         .args(["-o", &format!("{}/holding-cell.elf", &out_dir)])

@@ -1,0 +1,19 @@
+#!/bin/bash
+# Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+SCRIPTDIR="$(dirname $(readlink -f "$0"))"
+CONTAINER_IMAGE=quic/gunyah-test-vmm-dev-container:r002
+
+if ! docker image inspect "${CONTAINER_IMAGE}" 2>/dev/null > /dev/null ; then
+	docker build -t "${CONTAINER_IMAGE}" ${SCRIPTDIR}/impl/dev_container
+fi
+
+set -x
+exec docker run --rm -it \
+	-v "${PWD}:${PWD}" -w "${PWD}" \
+	--net=host \
+	${ADB_SERVER_SOCKET:+-e "ADB_SERVER_SOCKET=${ADB_SERVER_SOCKET}"} \
+	"${CONTAINER_IMAGE}" \
+	"$@"

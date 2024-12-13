@@ -400,7 +400,7 @@ mod tests {
     fn unmap_memory_single() {
         let gunyah = Gunyah::new().unwrap();
         let mem = gunyah
-            .create_guest_memory(NonZeroUsize::new(mib!(10)).unwrap(), false)
+            .create_guest_memory(NonZeroUsize::new(mib!(11)).unwrap(), false)
             .unwrap();
         let mut vm = gunyah.create_vm().unwrap();
 

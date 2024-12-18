@@ -10,7 +10,7 @@ use std::{
 use anyhow::{Context, Result};
 use gunyah_bindings::{gunyah_fn_irqfd_arg, gunyah_irqfd_flags};
 use libc::c_void;
-use nix::sys::eventfd::{eventfd, EfdFlags};
+use nix::sys::eventfd::{EfdFlags, EventFd};
 use same_file::Handle;
 
 use crate::{IrqfdFunction, Vm};
@@ -31,14 +31,15 @@ impl Irqfd {
             flags |= gunyah_irqfd_flags::GUNYAH_IRQFD_FLAGS_LEVEL;
         }
 
-        let raw_fd = eventfd(0, EfdFlags::empty()).context("failed to create eventfd")?;
+        let raw_fd = EventFd::from_value_and_flags(0, EfdFlags::empty())
+            .context("Failed to create eventfd")?;
         // SAFETY: Safe because we created the eventfd
-        let eventfd = unsafe { File::from_raw_fd(raw_fd) };
+        let eventfd = unsafe { File::from_raw_fd(raw_fd.as_raw_fd()) };
         let handle = Handle::from_file(eventfd).context("failed to stat eventfd")?;
 
         assert!(
             vm.add_function::<IrqfdFunction>(&gunyah_fn_irqfd_arg {
-                fd: raw_fd as u32,
+                fd: raw_fd.as_raw_fd() as u32,
                 label,
                 flags,
                 ..Default::default()

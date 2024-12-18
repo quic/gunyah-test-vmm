@@ -11,7 +11,7 @@ use std::{
 
 use anyhow::{Context, Result};
 use gunyah_bindings::{gunyah_fn_ioeventfd_arg, gunyah_ioeventfd_flags};
-use nix::sys::eventfd::{eventfd, EfdFlags};
+use nix::sys::eventfd::{EfdFlags, EventFd};
 use same_file::Handle;
 
 use crate::{IoeventfdFunction, Vm};
@@ -33,16 +33,17 @@ impl Ioeventfd {
             flags |= gunyah_ioeventfd_flags::GUNYAH_IOEVENTFD_FLAGS_DATAMATCH;
         }
 
-        let raw_fd = eventfd(0, EfdFlags::empty()).context("Failed to create eventfd")?;
+        let raw_fd = EventFd::from_value_and_flags(0, EfdFlags::empty())
+            .context("Failed to create eventfd")?;
         // SAFETY: Safe because we created the eventfd
-        let eventfd = unsafe { File::from_raw_fd(raw_fd) };
+        let eventfd = unsafe { File::from_raw_fd(raw_fd.as_raw_fd()) };
 
         assert!(
             vm.add_function::<IoeventfdFunction>(&gunyah_fn_ioeventfd_arg {
                 datamatch: datamatch.unwrap_or_default(),
                 addr,
                 len,
-                fd: raw_fd,
+                fd: raw_fd.as_raw_fd(),
                 flags,
                 ..Default::default()
             })

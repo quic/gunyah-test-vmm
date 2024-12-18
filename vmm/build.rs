@@ -32,23 +32,22 @@ fn build_unsafe_read(out_dir: &Path) {
         .expect("Couldn't write bindings!");
 }
 
-fn main() {
+fn build_holding_cell(out_dir: &Path) {
     for source in HOLDING_CELL_SOURCES {
         println!("cargo:rerun-if-changed={}", source);
     }
     println!("cargo:rerun-if-changed=tests/holding_cell/holding-cell.lds");
-    println!("cargo:rerun-if-changed=build.rs");
 
-    let cc = env::var("CC_aarch64-linux-android")
-        .or(env::var("CC_aarch64_linux_android"))
-        .expect("CC_aarch64-linux-android is unset");
-    let objcopy = env::var("OBJCOPY").expect("OBJCOPY is unset");
-    let out_dir = env::var("OUT_DIR").unwrap();
+    let compiler = cc::Build::new().get_compiler();
 
-    build_unsafe_read(&PathBuf::from(&out_dir));
+    let elf_path = out_dir.join("holding-cell.elf");
+    let elf_str = elf_path.to_str().unwrap();
 
-    assert!(Command::new(cc)
-        .args(["-o", &format!("{}/holding-cell.elf", &out_dir)])
+    let bin_path = out_dir.join("holding-cell.bin");
+    let bin_str = bin_path.to_str().unwrap();
+
+    assert!(Command::new(compiler.path())
+        .args(["-o", elf_str])
         .args(HOLDING_CELL_SOURCES)
         .arg("-Os")
         .arg("-static")
@@ -60,19 +59,28 @@ fn main() {
             "-fomit-frame-pointer",
             "-fno-exceptions",
             "-fno-asynchronous-unwind-tables",
-            "-fno-unwind-tables"
+            "-fno-unwind-tables",
         ])
         .stderr(stderr())
         .status()
         .unwrap()
         .success());
 
+    let objcopy = cargo_binutils::Tool::Objcopy.path().unwrap();
     assert!(Command::new(objcopy)
         .args(["-O", "binary"])
-        .arg(format!("{}/holding-cell.elf", &out_dir))
-        .arg(format!("{}/holding-cell.bin", &out_dir))
+        .arg(elf_str)
+        .arg(bin_str)
         .stderr(stderr())
         .status()
         .unwrap()
         .success());
+}
+
+fn main() {
+    println!("cargo:rerun-if-changed=build.rs");
+
+    let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
+    build_unsafe_read(&out_dir);
+    build_holding_cell(&out_dir);
 }

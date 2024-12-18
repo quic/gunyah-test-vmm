@@ -7,7 +7,6 @@ linker = "android-ndk/arm64/bin/aarch64-linux-android-clang"
 runner = "runners/adb_runner.sh"
 
 [env]
-CC_aarch64-linux-android = { value = "android-ndk/arm64/bin/aarch64-linux-android-clang", relative = true }
-OBJCOPY = { value = "android-ndk/arm64/bin/llvm-objcopy", relative = true }
-AR_aarch64-linux-android = { value = "android-ndk/arm64/bin/llvm-ar", relative = true }
+CC_aarch64_linux_android = { value = "android-ndk/arm64/bin/aarch64-linux-android-clang", relative = true }
+AR_aarch64_linux_android = { value = "android-ndk/arm64/bin/llvm-ar", relative = true }
 RUST_TEST_THREADS = "1"

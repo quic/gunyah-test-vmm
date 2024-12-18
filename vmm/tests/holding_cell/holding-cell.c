@@ -130,6 +130,8 @@ int main() {
 		if (COMMAND_HOLD(word))
 			tmp = *holding_cell;
 
+		(void)tmp;
+
 		switch (nargs) {
 		case 0:
 			*holding_cell = cmd->cb0();

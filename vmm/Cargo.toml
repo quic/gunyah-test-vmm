@@ -10,7 +10,7 @@ ack-bindings = ["gunyah/ack-bindings", "gunyah-bindings/ack-bindings"]
 
 [dependencies]
 libc = "0.2.168"
-vmm-sys-util = "0.11.2"
+vmm-sys-util = "0.12.1"
 gunyah-bindings = { path = "../gunyah-bindings" }
 gunyah = { path = "../gunyah" }
 thiserror = "1.0.69"

@@ -11,11 +11,11 @@ ack-bindings = ["gunyah/ack-bindings", "vmm/ack-bindings"]
 [dependencies]
 anyhow = "1.0.94"
 clap = { version = "4.5.23", features = ["cargo", "derive"] }
-derive_more = "0.99.18"
+derive_more = { version = "1.0.0", features = ["constructor", "deref"] }
 vmm = { path = "./vmm" }
 gunyah = { path = "./gunyah" }
 page_size = "0.6.0"
-vm-superio = "0.7.0"
+vm-superio = "0.8.0"
 
 [workspace]
 members = [".", "gunyah-bindings", "gunyah", "vmm"]

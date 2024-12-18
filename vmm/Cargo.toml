@@ -13,8 +13,8 @@ libc = "0.2.168"
 vmm-sys-util = "0.12.1"
 gunyah-bindings = { path = "../gunyah-bindings" }
 gunyah = { path = "../gunyah" }
-thiserror = "1.0.69"
-vm-fdt = "0.2.0"
+thiserror = "2.0.8"
+vm-fdt = "0.3.0"
 anyhow = "1.0.94"
 
 [dev-dependencies]
@@ -22,11 +22,11 @@ claim = "0.5.0"
 core_affinity = "0.8.1"
 fdt = { version = "0.1.5", features = ["pretty-printing"] }
 hexdump = "0.1.2"
-mio = { version = "0.8.11", features = ["os-poll", "os-ext"] }
+mio = { version = "1.0.3", features = ["os-poll", "os-ext"] }
 modular-bitfield = "0.11.2"
-nix = { version = "0.27.1", features = ["signal"] }
+nix = { version = "0.29.0", features = ["signal"] }
 nonzero_ext = "0.3.0"
-rstest = { version = "0.18.2", default-features = false }
+rstest = { version = "0.23.0", default-features = false }
 serial_test = "3.2.0"
 page_size = "0.6.0"
 pow2 = "0.1.1"
@@ -34,4 +34,4 @@ pow2 = "0.1.1"
 [build-dependencies]
 bindgen = "0.71.1"
 cargo-binutils = "0.3.6"
-cc = "1.2.3"
+cc = "1.2.4"

@@ -11,7 +11,7 @@ ack-bindings = ["gunyah-bindings/ack-bindings", "dep:memfd"]
 [dependencies]
 libc = "0.2.168"
 gunyah-bindings = { path = "../gunyah-bindings" }
-nix = { version = "0.26.4", default-features = false, features = ["ioctl", "fs", "event"] }
+nix = { version = "0.29.0", default-features = false, features = ["ioctl", "fs", "event"] }
 claim = "0.5.0"
 same-file = "1.0.6"
 anyhow = "1.0.94"

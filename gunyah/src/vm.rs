@@ -277,7 +277,7 @@ impl Vm {
         Ok(Self(
             Handle::from_file(file).map_err(|e| {
                 e.raw_os_error()
-                    .map_or(nix::Error::UnknownErrno, nix::Error::from_i32)
+                    .map_or(nix::Error::UnknownErrno, nix::Error::from_raw)
             })?,
             #[cfg(feature = "ack-bindings")]
             self.1.clone(),
